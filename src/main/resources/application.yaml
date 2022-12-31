@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: community
+  thymeleaf:
+    cache: true
+    check-template: true
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+#    username: sa
+#    password: 123
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test
+server:
+  port: 8080
+
+github:
+  client:
+    id: 1a24c2ecdddf6a7ff7c2
+    secret: 34b578575da996fc05da4794a099b917c13190ae
+  redirect:
+    uri: http://localhost:8080/callback
+
+
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
