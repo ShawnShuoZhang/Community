@@ -5,6 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 用户
+ *
+ * @author 张硕
+ * @date 2022/12/31
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +22,5 @@ public class User {
     private String token;
     private Long gmtCreate;
     private Long gmtModified;
+    private String avatarUrl;
 }

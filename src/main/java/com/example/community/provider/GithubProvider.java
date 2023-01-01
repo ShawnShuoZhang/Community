@@ -8,6 +8,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * github提供者
+ *
+ * @author Tuoer
+ * @date 2023/01/01
+ */
 @Component
 public class GithubProvider {
     public String getAccessToken(AccessTokenDto accessTokenDto) {
@@ -41,6 +47,8 @@ public class GithubProvider {
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
+            System.out.println(githubUser.getAvatar_url());
+            System.out.println(githubUser.toString());
             return githubUser;
         } catch (IOException e) {
             throw new RuntimeException(e);

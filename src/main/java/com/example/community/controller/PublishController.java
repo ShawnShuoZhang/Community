@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * 发布控制器
+ *
+ * @author Tuoer
+ * @date 2023/01/01
+ */
 @Controller
 public class PublishController {
     @Autowired

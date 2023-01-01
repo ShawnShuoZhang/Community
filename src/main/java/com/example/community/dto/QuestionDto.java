@@ -1,21 +1,16 @@
-package com.example.community.model;
+package com.example.community.dto;
 
-import lombok.AllArgsConstructor;
+import com.example.community.model.User;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
- * 问题
+ * 问题dto
  *
  * @author Tuoer
- * @date 2022/12/31
+ * @date 2023/01/01
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-public class Question {
+public class QuestionDto {
     private Integer id;
     private String title;
     private String description;
@@ -26,4 +21,5 @@ public class Question {
     private Integer viewCount;
     private Integer likeCount;
     private String tag;
+    private User user;
 }
