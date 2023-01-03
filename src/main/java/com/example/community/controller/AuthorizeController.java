@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -36,11 +37,21 @@ public class AuthorizeController {
     @Autowired
     UserMapper userMapper;
 
+    /**
+     * 回调
+     *
+     * @param code     代码
+     * @param state    状态
+     * @param request  请求
+     * @param response 响应
+     * @return {@link String}
+     * @throws IOException ioexception
+     */
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletRequest request,
-                           HttpServletResponse response) {
+                           HttpServletResponse response) throws IOException {
         AccessTokenDto accessTokenDto = new AccessTokenDto();
         accessTokenDto.setCode(code);
         accessTokenDto.setRedirect_uri(redirectUri);
@@ -59,13 +70,16 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            user.setAvatarUrl(githubUser.getAvatar_url());
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             userMapper.insert(user);
-            response.addCookie(new Cookie("token", token));
-            return "redirect:/";
+            Cookie cookie = new Cookie("token", token);
+            response.addCookie(cookie);
+            response.sendRedirect("/");
+            return null;
         } else {
             // 登录失败
-            return "redirect:/";
+            response.sendRedirect("/");
+            return null;
         }
     }
 }

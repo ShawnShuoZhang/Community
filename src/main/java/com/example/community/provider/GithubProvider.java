@@ -1,6 +1,6 @@
 package com.example.community.provider;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.example.community.dto.AccessTokenDto;
 import com.example.community.dto.GithubUser;
 import okhttp3.*;
@@ -16,6 +16,12 @@ import java.io.IOException;
  */
 @Component
 public class GithubProvider {
+    /**
+     * 获取访问令牌
+     *
+     * @param accessTokenDto 访问令牌dto
+     * @return {@link String}
+     */
     public String getAccessToken(AccessTokenDto accessTokenDto) {
         MediaType JSON1 = MediaType.get("application/json");
 
@@ -38,6 +44,12 @@ public class GithubProvider {
         }
     }
 
+    /**
+     * 获取用户
+     *
+     * @param accessToken 访问令牌
+     * @return {@link GithubUser}
+     */
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -47,7 +59,7 @@ public class GithubProvider {
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
-            System.out.println(githubUser.getAvatar_url());
+            System.out.println(githubUser.getAvatarUrl());
             System.out.println(githubUser.toString());
             return githubUser;
         } catch (IOException e) {

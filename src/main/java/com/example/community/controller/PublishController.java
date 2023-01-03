@@ -23,11 +23,26 @@ public class PublishController {
     @Autowired
     QuestionMapper questionMapper;
 
+    /**
+     * 打开发布页面
+     *
+     * @return {@link String}
+     */
     @GetMapping("/publish")
     public String publish() {
         return "publish";
     }
 
+    /**
+     * 进行发布动作
+     *
+     * @param title       标题
+     * @param description 描述
+     * @param tag         标签
+     * @param session     会话
+     * @param model       模型
+     * @return {@link String}
+     */
     @PostMapping("/publish")
     public String doPublish(@RequestParam(value = "title", required = false) String title,
                             @RequestParam(value = "description", required = false) String description,

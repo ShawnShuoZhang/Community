@@ -12,10 +12,13 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
   datasource:
-#    username: sa
-#    password: 123
+    #    username: sa
+    #    password: 123
     driver-class-name: org.h2.Driver
     url: jdbc:h2:~/test
+  devtools:
+    restart:
+      exclude: static/**,public/**,templates/**
 server:
   port: 8080
 
@@ -30,3 +33,8 @@ github:
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
+
+pagehelper:
+  helper-dialect: h2
+  reasonable: true
+  support-methods-arguments: true
