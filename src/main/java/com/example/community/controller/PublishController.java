@@ -1,12 +1,16 @@
 package com.example.community.controller;
 
-import com.example.community.mapper.QuestionMapper;
+import com.example.community.dto.QuestionDto;
+import com.example.community.exception.CustomizeException;
+import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.model.Question;
 import com.example.community.model.User;
+import com.example.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +25,27 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class PublishController {
     @Autowired
-    QuestionMapper questionMapper;
+    QuestionService questionService;
+
+    /**
+     * 编辑问题
+     *
+     * @param id      id
+     * @param model   模型
+     * @param session 会话
+     * @return {@link String}
+     */
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Long id,
+                       Model model,
+                       HttpSession session) {
+        QuestionDto question = questionService.findById(id);
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        session.setAttribute("id", question.getId());
+        return "publish";
+    }
 
     /**
      * 打开发布页面
@@ -49,6 +73,7 @@ public class PublishController {
                             @RequestParam(value = "tag", required = false) String tag,
                             HttpSession session,
                             Model model) {
+        Long id = (Long) session.getAttribute("id");
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
@@ -73,10 +98,19 @@ public class PublishController {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
-        question.setCreator(user.getId());
+        question.setCreator(user.getAccountId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
-        questionMapper.create(question);
+        if (id == null) {
+            questionService.create(question);
+        } else {
+            question.setId(id);
+            Integer update = questionService.update(question);
+            session.setAttribute("id", null);
+            if (update != 1) {
+                throw new CustomizeException(ECustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+        }
         return "redirect:/";
     }
 }

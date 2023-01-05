@@ -18,7 +18,7 @@ spring:
     url: jdbc:h2:~/test
   devtools:
     restart:
-      exclude: static/**,public/**,templates/**
+      exclude: classpath:/templates/**
 server:
   port: 8080
 

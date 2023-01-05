@@ -7,7 +7,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -27,6 +29,5 @@ class CommunityApplicationTests {
         System.out.println(questionPageInfo.getTotal());
         System.out.println(questionPageInfo.getPageNum());
         System.out.println(questionPageInfo.getPageSize());
-
     }
 }

@@ -30,6 +30,7 @@ public class PaginationDto {
      * 总页数
      */
     private Integer totalPage;
+    private Integer size;
 
     /**
      * 设置分页
@@ -40,6 +41,7 @@ public class PaginationDto {
      * @param size  每页条数
      */
     public void setPagination(Integer pages, long total, Integer page, Integer size) {
+        this.size = size;
         this.totalPage = pages;
         page = page < 1 ? 1 : page;
         page = page > pages ? pages : page;

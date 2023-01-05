@@ -1,10 +1,7 @@
 package com.example.community.mapper;
 
 import com.example.community.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 /**
  * 用户映射器
@@ -31,12 +28,29 @@ public interface UserMapper {
     @Select("select * from user_community where token = #{token}")
     User findByToken(@Param("token") String token);
 
+    // /**
+    //  * 找到帐户id
+    //  *
+    //  * @param id id
+    //  * @return {@link User}
+    //  */
+    // @Select("select * from user_community where ACCOUNT_ID = #{id}")
+    // User findByAccountId(@Param("id")String id);
+
     /**
      * 查找通过id
      *
      * @param creator 创造者
      * @return {@link User}
      */
-    @Select("select * from user_community where id = #{creator}")
-    User findById(@Param("creator") Integer creator);
+    @Select("select * from user_community where ACCOUNT_ID = #{creator} limit 1")
+    User findById(@Param("creator") String creator);
+
+    /**
+     * 更新
+     *
+     * @param byAccountId 通过帐户id
+     */
+    @Update("update user_community set token = #{token}, gmt_modified = #{gmtModified} where ACCOUNT_ID = #{accountId}")
+    void update(User byAccountId);
 }

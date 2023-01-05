@@ -11,55 +11,60 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "QUESTION")
-public class Question {
+@TableName(value = "\"COMMENT\"")
+public class Comment {
     @TableId(value = "ID", type = IdType.INPUT)
     private Long id;
 
-    @TableField(value = "TITLE")
-    private String title;
+    @TableField(value = "PARENT_ID")
+    private String parentId;
 
-    @TableField(value = "DESCRIPTION")
-    private String description;
+    /**
+     * 父类类型
+     */
+    @TableField(value = "\"TYPE\"")
+    private Integer type;
 
+    /**
+     * 评论人id
+     */
+    @TableField(value = "COMMENTATOR")
+    private String commentator;
+
+    /**
+     * 创建时间
+     */
     @TableField(value = "GMT_CREATE")
     private Long gmtCreate;
 
+    /**
+     * 更新时间
+     */
     @TableField(value = "GMT_MODIFIED")
     private Long gmtModified;
 
-    @TableField(value = "CREATOR")
-    private String creator;
-
-    @TableField(value = "COMMENT_COUNT")
-    private Integer commentCount;
-
-    @TableField(value = "VIEW_COUNT")
-    private Integer viewCount;
-
+    /**
+     * 点赞数
+     */
     @TableField(value = "LIKE_COUNT")
-    private Integer likeCount;
+    private Long likeCount;
 
-    @TableField(value = "TAG")
-    private String tag;
+    @TableField(value = "CONTENT")
+    private String content;
 
     public static final String COL_ID = "ID";
 
-    public static final String COL_TITLE = "TITLE";
+    public static final String COL_PARENT_ID = "PARENT_ID";
 
-    public static final String COL_DESCRIPTION = "DESCRIPTION";
+    public static final String COL_TYPE = "TYPE";
+
+    public static final String COL_COMMENTATOR = "COMMENTATOR";
 
     public static final String COL_GMT_CREATE = "GMT_CREATE";
 
     public static final String COL_GMT_MODIFIED = "GMT_MODIFIED";
 
-    public static final String COL_CREATOR = "CREATOR";
-
-    public static final String COL_COMMENT_COUNT = "COMMENT_COUNT";
-
-    public static final String COL_VIEW_COUNT = "VIEW_COUNT";
-
     public static final String COL_LIKE_COUNT = "LIKE_COUNT";
 
-    public static final String COL_TAG = "TAG";
+    public static final String COL_CONTENT = "CONTENT";
 }

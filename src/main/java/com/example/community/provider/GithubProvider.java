@@ -36,8 +36,8 @@ public class GithubProvider {
             String string = response.body().string();
             System.out.println(string);
             String[] split = string.split("&");
-            String tokenstr = split[0];
-            String token = tokenstr.split("=")[1];
+            String tokenStr = split[0];
+            String token = tokenStr.split("=")[1];
             return token;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -60,7 +60,7 @@ public class GithubProvider {
             String string = response.body().string();
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             System.out.println(githubUser.getAvatarUrl());
-            System.out.println(githubUser.toString());
+            System.out.println(githubUser);
             return githubUser;
         } catch (IOException e) {
             throw new RuntimeException(e);

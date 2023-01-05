@@ -22,3 +22,25 @@ body {
     font-weight: normal;
     color: #999;
 }
+
+/*z轴效果*/
+.z {
+    box-shadow: 0 0 10px #a8a8a8;
+}
+
+.profile .section {
+    margin-top: 15px;
+}
+
+.profile .wrap {
+    vertical-align: middle;
+}
+
+.wrap {
+    vertical-align: middle;
+}
+
+.community-menu {
+    color: #999;
+    font-size: 13px;
+}
