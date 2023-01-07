@@ -6,10 +6,12 @@
 
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+<!--        <setting name="logImpl" value="STDOUT_LOGGING"/>-->
     </settings>
     <mappers>
         <mapper class="com.example.community.mapper.UserMapper"/>
         <mapper class="com.example.community.mapper.QuestionMapper"/>
+        <mapper class="com.example.community.mapper.CommentMapper"/>
     </mappers>
 
 </configuration>

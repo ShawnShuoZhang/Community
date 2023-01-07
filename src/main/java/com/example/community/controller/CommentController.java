@@ -1,6 +1,6 @@
 package com.example.community.controller;
 
-import com.example.community.dto.CommentDto;
+import com.example.community.dto.CommentCreateDto;
 import com.example.community.dto.ResultDto;
 import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.service.CommentService;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 
 /**
  * 评论控制器
@@ -24,12 +23,12 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDto commentDto,
+    public Object post(@RequestBody CommentCreateDto commentCreateDto,
                        HttpSession session) {
         if (session.getAttribute("user") == null) {
             return ResultDto.errorOf(ECustomizeErrorCode.NO_LOGIN);
         }
-        commentService.insert(commentDto, session);
+        commentService.insert(commentCreateDto, session);
         return ResultDto.okOf();
     }
 }

@@ -123,7 +123,7 @@ public class QuestionService {
     }
 
     /**
-     * 增加评论数
+     * 增加阅读数
      *
      * @param questionId 问题id
      */

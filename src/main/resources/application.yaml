@@ -33,8 +33,17 @@ github:
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  type-aliases-package: com.example.community.model
 
 pagehelper:
   helper-dialect: h2
   reasonable: true
   support-methods-arguments: true
+logging:
+  level:
+    com:
+      example:
+        community:
+          mapper: debug

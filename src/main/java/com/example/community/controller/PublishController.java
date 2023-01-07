@@ -102,6 +102,9 @@ public class PublishController {
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
         if (id == null) {
+            question.setCommentCount(0);
+            question.setViewCount(0);
+            question.setLikeCount(0);
             questionService.create(question);
         } else {
             question.setId(id);

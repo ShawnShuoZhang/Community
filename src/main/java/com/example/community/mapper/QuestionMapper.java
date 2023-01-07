@@ -6,6 +6,12 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * 问题映射器
+ *
+ * @author Tuoer
+ * @date 2023/01/07
+ */
 @Mapper
 public interface QuestionMapper extends BaseMapper<Question> {
     /**
@@ -13,7 +19,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
      *
      * @param question 问题
      */
-    @Insert("insert into question (title, description, gmt_create, gmt_modified, creator, tag) values (#{title}, #{description}, #{gmtCreate}, #{gmtModified}, #{creator}, #{tag})")
+    @Insert("insert into QUESTION (TITLE,DESCRIPTION,TAG,GMT_CREATE,GMT_MODIFIED,CREATOR,COMMENT_COUNT,VIEW_COUNT,LIKE_COUNT) values (#{title},#{description},#{tag},#{gmtCreate},#{gmtModified},#{creator},#{commentCount},#{viewCount},#{likeCount})")
     void create(Question question);
 
     /**
