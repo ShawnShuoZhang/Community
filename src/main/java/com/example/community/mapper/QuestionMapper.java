@@ -1,6 +1,7 @@
 package com.example.community.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.community.dto.QuestionDto;
 import com.example.community.model.Question;
 import org.apache.ibatis.annotations.*;
 
@@ -27,7 +28,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
      *
      * @return {@link List}<{@link Question}>
      */
-    @Select("select * from question")
+    @Select("select * from question order by GMT_CREATE desc ")
     List<Question> list();
 
     /**
@@ -73,4 +74,13 @@ public interface QuestionMapper extends BaseMapper<Question> {
      */
     @Update("update question set comment_count = comment_count + 1 where id = #{id}")
     void icComment(@Param("id") Long questionId);
+
+    /**
+     * 相关问题列表
+     *
+     * @param question 问题
+     * @return {@link List}<{@link Question}>
+     */
+    @Select("select * from question where id != #{id} and tag regexp (select replace(tag, '，', '|') from QUESTION where id = #{id}) order by GMT_CREATE desc limit 20")
+    List<Question> relatedQuestionList(QuestionDto question);
 }
