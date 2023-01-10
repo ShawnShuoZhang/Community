@@ -1,5 +1,7 @@
 package com.example.community.service;
 
+import cn.hutool.Hutool;
+import cn.hutool.core.collection.ListUtil;
 import com.example.community.dto.PaginationDto;
 import com.example.community.dto.QuestionDto;
 import com.example.community.exception.CustomizeException;
@@ -41,6 +43,7 @@ public class QuestionService {
     public PaginationDto list(Integer page, Integer size) {
         PageHelper.startPage(page, size);
         List<Question> list = questionMapper.list();
+        // ListUtil.sortByProperty(list, "gmtCreate");
         return getPaginationDto(page, size, list);
     }
 
@@ -129,6 +132,16 @@ public class QuestionService {
      */
     public void icView(Long questionId) {
         questionMapper.icView(questionId);
+    }
+
+    /**
+     * 找到相关问题
+     *
+     * @param questionDto 问题dto
+     * @return {@link List}<{@link Question}>
+     */
+    public List<Question> findRelatedQuestion(QuestionDto questionDto) {
+        return questionMapper.relatedQuestionList(questionDto);
     }
 }
 

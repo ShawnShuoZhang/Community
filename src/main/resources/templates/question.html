@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/community.css">
     <script src="https://cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
     <script src="/js/community.js" type="application/javascript"></script>
+    <script src="/js/moment.js"></script>
 </head>
 <body>
 <!--导航条-->
@@ -19,7 +20,7 @@
         <!--        左边-->
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h4>
+                <h4 class="question-title">
                     <span class="glyphicon glyphicon-question-sign wrap" aria-hidden="true"></span>
                     <span th:text="${question.getTitle()}" th:class="wrap"></span>
                 </h4>
@@ -37,35 +38,48 @@
                 <span class="wrap" th:text="${question.viewCount}"></span>
                 </span>
 
-                <hr>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
                     <span th:text="${question.description}"></span>
                 </div>
 
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <span class="question-tag label community-tag" th:each="tag : ${question.tag.split('，')}">
+                        <a th:href="@{/(page=1,tag=${tag})}">
+                            <span class="glyphicon glyphicon-tags wrap" style="color: whitesmoke"></span>
+                            <span th:text="${tag}" class="wrap" style="color: whitesmoke;margin-left: 3px"></span>
+                        </a>
+                    </span>
+                </div>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <br>
                 <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
                    th:if="${session.user != null && session.user.getAccountId() == question.creator}">
-                    <span class="glyphicon glyphicon-pencil wrap" aria-hidden="true"></span>
-                    <span th:text="'编辑'" class="wrap"></span>
+                    <div style="margin-left: 15px">
+                        <span class="glyphicon glyphicon-pencil wrap" aria-hidden="true"></span>
+                        <span th:text="'编辑'" class="wrap">
+                        </span>
+                    </div>
                 </a>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             </div>
-<!--            回复输入框-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--                <textarea class="form-control" rows="3"></textarea>-->
-<!--            </div>-->
+            <!--            回复输入框-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--                <textarea class="form-control" rows="3"></textarea>-->
+            <!--            </div>-->
 
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
 
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 top-header"-->
-<!--                 th:if="${!#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('HEADER'))}"-->
-<!--                 th:each="ad : ${#httpServletRequest.getServletContext().getAttribute('HEADER')}">-->
-<!--                <a th:href="${ad.url}" th:text="${ad.title}" target="_blank"-->
-<!--                   style="color: #A00;font-weight: bold;"></a>-->
-<!--                <img src="/images/hot.png"/>-->
-<!--            </div>-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 top-header"-->
+            <!--                 th:if="${!#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('HEADER'))}"-->
+            <!--                 th:each="ad : ${#httpServletRequest.getServletContext().getAttribute('HEADER')}">-->
+            <!--                <a th:href="${ad.url}" th:text="${ad.title}" target="_blank"-->
+            <!--                   style="color: #A00;font-weight: bold;"></a>-->
+            <!--                <img src="/images/hot.png"/>-->
+            <!--            </div>-->
 
 
             <!--内容-->
@@ -74,52 +88,46 @@
             <!--            </div>-->
 
 
-<!--            <script type="text/javascript">-->
-<!--                $(function () {-->
-<!--                    editormd.markdownToHTML("question-view", {});-->
-<!--                });-->
-<!--            </script>-->
+            <!--            <script type="text/javascript">-->
+            <!--                $(function () {-->
+            <!--                    editormd.markdownToHTML("question-view", {});-->
+            <!--                });-->
+            <!--            </script>-->
 
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"-->
-<!--                 th:if="${!#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('FOOTER'))}"-->
-<!--                 th:each="ad : ${#httpServletRequest.getServletContext().getAttribute('FOOTER')}">-->
-<!--                <a th:href="${ad.url}" th:text="${ad.title}" target="_blank"-->
-<!--                   style="color: #A00;font-weight: bold;"></a>-->
-<!--            </div>-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="width: 100%;"-->
-<!--                 th:if="${#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('FOOTER'))}">-->
-<!--                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
-<!--                &lt;!&ndash; 页尾广告 &ndash;&gt;-->
-<!--                <ins class="adsbygoogle"-->
-<!--                     style="display:block"-->
-<!--                     data-ad-client="ca-pub-9804684553882114"-->
-<!--                     data-ad-slot="4772323686"-->
-<!--                     data-ad-format="auto"-->
-<!--                     data-full-width-responsive="true"></ins>-->
-<!--                <script>-->
-<!--                    (adsbygoogle = window.adsbygoogle || []).push({});-->
-<!--                </script>-->
-<!--            </div>-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"-->
+            <!--                 th:if="${!#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('FOOTER'))}"-->
+            <!--                 th:each="ad : ${#httpServletRequest.getServletContext().getAttribute('FOOTER')}">-->
+            <!--                <a th:href="${ad.url}" th:text="${ad.title}" target="_blank"-->
+            <!--                   style="color: #A00;font-weight: bold;"></a>-->
+            <!--            </div>-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="width: 100%;"-->
+            <!--                 th:if="${#lists.isEmpty(#httpServletRequest.getServletContext().getAttribute('FOOTER'))}">-->
+            <!--                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+            <!--                &lt;!&ndash; 页尾广告 &ndash;&gt;-->
+            <!--                <ins class="adsbygoogle"-->
+            <!--                     style="display:block"-->
+            <!--                     data-ad-client="ca-pub-9804684553882114"-->
+            <!--                     data-ad-slot="4772323686"-->
+            <!--                     data-ad-format="auto"-->
+            <!--                     data-full-width-responsive="true"></ins>-->
+            <!--                <script>-->
+            <!--                    (adsbygoogle = window.adsbygoogle || []).push({});-->
+            <!--                </script>-->
+            <!--            </div>-->
 
-            <!--标签-->
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--                    <span class="question-tag" th:each="tag : ${question.tag.split(',')}">-->
-<!--                        <a th:href="@{/(page=1,tag=${tag})}"-->
-<!--                           th:text="${tag}" class="community-tag"></a>-->
-<!--                    </span>-->
-<!--            </div>-->
+            <!--            标签-->
+            <!--                        <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
 
 
-<!--            &lt;!&ndash;编辑&ndash;&gt;-->
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--                <a th:href="@{'/publish/'+${question.id}}" class="community-menu"-->
-<!--                   th:if="${session.user != null && session.user.id == question.creator}">-->
-<!--                    <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--            &lt;!&ndash;编辑&ndash;&gt;-->
+            <!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--                <a th:href="@{'/publish/'+${question.id}}" class="community-menu"-->
+            <!--                   th:if="${session.user != null && session.user.id == question.creator}">-->
+            <!--                    <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>-->
+            <!--                </a>-->
+            <!--            </div>-->
+            <!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
             <!--回复-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>
@@ -134,7 +142,7 @@
                                      th:src="${comment.user.avatarUrl}">
                             </a>
                         </div>
-                        <div class="media-body" th:id="${'comment-body-'+comment.id}">
+                        <div class="media-body" th:id="${'comment-body-'+comment.id}" style="padding-top: 0px">
                             <h5 class="media-heading">
                                 <span th:text="${comment.user.name}"></span>
                             </h5>
@@ -144,7 +152,7 @@
                                 <span th:data-id="${comment.id}"
                                       onclick="collapseComments(this)" class="comment-icon wrap">
                                     <span class="glyphicon glyphicon-comment wrap"></span>
-<!--                                    <span th:text="${comment.commentCount}" class="wrap"></span>-->
+                                    <span th:text="${comment.commentCount}" class="wrap"></span>
                                 </span>
                                 <span class="pull-right wrap"
                                       th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>
@@ -213,8 +221,10 @@
                     </div>
                 </div>
             </div>
-            <!--        <div th:insert="~{notice :: notice}"></div>-->
-            <!--        <div th:insert="~{side :: side}"></div>-->
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div th:insert="~{notice :: notice}"></div>
+            <!--            <div th:insert="~{side :: side}"></div>-->
+
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>

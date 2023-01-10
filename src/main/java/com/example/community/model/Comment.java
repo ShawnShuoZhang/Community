@@ -8,12 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 评论
- *
- * @author Tuoer
- * @date 2023/01/07
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -58,6 +52,9 @@ public class Comment {
     @TableField(value = "CONTENT")
     private String content;
 
+    @TableField(value = "COMMENT_COUNT")
+    private Integer commentCount;
+
     public static final String COL_ID = "ID";
 
     public static final String COL_PARENT_ID = "PARENT_ID";
@@ -73,4 +70,6 @@ public class Comment {
     public static final String COL_LIKE_COUNT = "LIKE_COUNT";
 
     public static final String COL_CONTENT = "CONTENT";
+
+    public static final String COL_COMMENT_COUNT = "COMMENT_COUNT";
 }

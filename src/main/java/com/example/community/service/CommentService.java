@@ -1,5 +1,6 @@
 package com.example.community.service;
 
+import cn.hutool.core.collection.ListUtil;
 import com.example.community.dto.CommentCreateDto;
 import com.example.community.dto.CommentDto;
 import com.example.community.enums.CommentTypeEnum;
@@ -40,7 +41,7 @@ public class CommentService {
     private UserMapper userMapper;
 
     @Transactional
-    public void insert(CommentCreateDto commentCreateDto, HttpSession session) {
+    public void insert(CommentCreateDto commentCreateDto, HttpSession session, Integer type) {
         Comment comment = new Comment();
         comment.setParentId(commentCreateDto.getParentId());
         comment.setContent(commentCreateDto.getContent());
@@ -58,13 +59,14 @@ public class CommentService {
         if (comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())) {
             throw new CustomizeException(ECustomizeErrorCode.TYPE_PARAM_WRONG);
         }
-        if (comment.getType().equals(CommentTypeEnum.COMMENT.getType())) {
+        if (comment.getType().equals(type)) {
             // 回复评论
             Comment dbComment = commentMapper.selectById(Long.parseLong(comment.getParentId()));
             if (dbComment == null) {
                 throw new CustomizeException(ECustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            commentMapper.incCommentCount(Long.parseLong(comment.getParentId()));
         } else {
             // 回复问题
             Question question = questionMapper.selectById(Long.parseLong(comment.getParentId()));
@@ -80,11 +82,12 @@ public class CommentService {
      * 发现由父id
      *
      * @param questionId 问题id
+     * @param type
      * @return {@link List}<{@link CommentCreateDto}>
      */
-    public List<CommentDto> findByParentId(Long questionId) {
+    public List<CommentDto> findByParentId(Long questionId, CommentTypeEnum type) {
         System.out.println("questionId = " + questionId.toString());
-        List<Comment> byParentId = commentMapper.selectByParentIdAndType(String.valueOf(questionId), CommentTypeEnum.QUESTION.getType());
+        List<Comment> byParentId = commentMapper.selectByParentIdAndType(String.valueOf(questionId), type.getType());
         if (byParentId.size() == 0) {
             return new ArrayList<>();
         }
@@ -95,6 +98,8 @@ public class CommentService {
             BeanUtils.copyProperties(comment, commentDto);
             commentDtos.add(commentDto);
         }
+        ListUtil.sortByProperty(commentDtos, "gmtCreate");
+        ListUtil.reverse(commentDtos);
         return commentDtos;
     }
 }

@@ -1,11 +1,13 @@
 package com.example.community.controller;
 
+import com.example.community.cache.TagCache;
 import com.example.community.dto.QuestionDto;
 import com.example.community.exception.CustomizeException;
 import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.model.Question;
 import com.example.community.model.User;
 import com.example.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +46,7 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         session.setAttribute("id", question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -53,7 +56,8 @@ public class PublishController {
      * @return {@link String}
      */
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -73,6 +77,7 @@ public class PublishController {
                             @RequestParam(value = "tag", required = false) String tag,
                             HttpSession session,
                             Model model) {
+        model.addAttribute("tags", TagCache.get());
         Long id = (Long) session.getAttribute("id");
         model.addAttribute("title", title);
         model.addAttribute("description", description);
@@ -87,6 +92,12 @@ public class PublishController {
         }
         if (tag == null || "".equals(tag)) {
             model.addAttribute("error", "标签不能为空");
+            return "publish";
+        }
+        //todo
+        String filterInvalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(filterInvalid)) {
+            model.addAttribute("error", "输入非法标签" + filterInvalid);
             return "publish";
         }
         Question question = new Question();

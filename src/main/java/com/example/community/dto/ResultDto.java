@@ -11,10 +11,10 @@ import lombok.Data;
  * @date 2023/01/05
  */
 @Data
-public class ResultDto {
+public class ResultDto<T> {
     private Integer code;
     private String message;
-
+    private T data;
     public static ResultDto errorOf(Integer code, String message) {
         ResultDto resultDto = new ResultDto();
         resultDto.setCode(code);
@@ -37,11 +37,11 @@ public class ResultDto {
         return errorOf(e.getCode(), e.getMessage());
     }
 
-    // public static ResultDto okOf(Object data) {
-    //     ResultDto resultDto = new ResultDto();
-    //     resultDto.setCode(200);
-    //     resultDto.setMessage("请求成功");
-    //     resultDto.setData(data);
-    //     return resultDto;
-    // }
+    public static <T> ResultDto okOf(T data) {
+        ResultDto resultDto = new ResultDto();
+        resultDto.setCode(200);
+        resultDto.setMessage("请求成功");
+        resultDto.setData(data);
+        return resultDto;
+    }
 }
