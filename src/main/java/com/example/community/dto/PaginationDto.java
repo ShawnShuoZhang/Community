@@ -12,24 +12,42 @@ import java.util.List;
  * @date 2023/01/02
  */
 @Data
-public class PaginationDto {
-    private List<QuestionDto> questions;
+public class PaginationDto<T> {
+    /**
+     * 数据
+     */
+    private List<T> data;
+    /**
+     * 显示之前
+     */
     private boolean showPrevious;
+    /**
+     * 显示第一页
+     */
     private boolean showFirstPage;
+    /**
+     * 显示下一个
+     */
     private boolean showNext;
+    /**
+     * 显示结束页
+     */
     private boolean showEndPage;
     /**
-     * 当前页
+     * 页面
      */
     private Integer page;
     /**
-     * 显示下面都有哪几页的表
+     * 页面
      */
     private List<Integer> pages = new ArrayList<>();
     /**
-     * 总页数
+     * 总页
      */
     private Integer totalPage;
+    /**
+     * 大小
+     */
     private Integer size;
 
     /**

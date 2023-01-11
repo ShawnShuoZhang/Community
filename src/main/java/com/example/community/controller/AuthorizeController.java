@@ -23,15 +23,30 @@ import java.io.IOException;
  */
 @Controller
 public class AuthorizeController {
+    /**
+     * github提供者
+     */
     @Autowired
     private GithubProvider githubProvider;
 
+    /**
+     * 客户机id
+     */
     @Value("${github.client.id}")
     private String clientId;
+    /**
+     * 客户秘密
+     */
     @Value("${github.client.secret}")
     private String clientSecret;
+    /**
+     * 重定向uri
+     */
     @Value("${github.redirect.uri}")
     private String redirectUri;
+    /**
+     * 用户服务
+     */
     @Autowired
     UserService userService;
 
@@ -61,7 +76,7 @@ public class AuthorizeController {
         if (githubUser != null && githubUser.getId() != null) {
             // 登录成功
             request.getSession().setAttribute("user", githubUser);
-            String token = userService.createOrUpdate(githubUser);
+            String token = userService.createOrUpdate(githubUser, request.getSession());
             Cookie cookie = new Cookie("token", token);
             response.addCookie(cookie);
         } else {
@@ -71,6 +86,13 @@ public class AuthorizeController {
         return null;
     }
 
+    /**
+     * 注销
+     *
+     * @param request  请求
+     * @param response 响应
+     * @return {@link String}
+     */
     @GetMapping("/logout")
     public String logout(HttpServletRequest request,
                          HttpServletResponse response) {

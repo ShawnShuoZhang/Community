@@ -6,6 +6,7 @@ import com.example.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 /**
@@ -16,11 +17,28 @@ import java.util.UUID;
  */
 @Service
 public class UserService {
+    /**
+     * 用户映射器
+     */
     @Autowired
     UserMapper userMapper;
 
-    public String createOrUpdate(GithubUser githubUser) {
+    /**
+     * 通知服务
+     */
+    @Autowired
+    NotificationService notificationService;
+
+    /**
+     * 创建或更新
+     *
+     * @param githubUser github用户
+     * @param session    会话
+     * @return {@link String}
+     */
+    public String createOrUpdate(GithubUser githubUser, HttpSession session) {
         User byAccountId = userMapper.findById(String.valueOf(githubUser.getId()));
+        session.setAttribute("unreadCount", notificationService.unreadCount(String.valueOf(githubUser.getId())));
         String token = UUID.randomUUID().toString();
         if (byAccountId == null) {
             // 插入数据库

@@ -16,6 +16,7 @@ import java.util.List;
 @Mapper
 public interface QuestionMapper extends BaseMapper<Question> {
     /**
+     * 创建
      * 创建(插入)
      *
      * @param question 问题
@@ -24,6 +25,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
     void create(Question question);
 
     /**
+     * 列表
      * 查找问题列表
      *
      * @return {@link List}<{@link Question}>
@@ -32,6 +34,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
     List<Question> list();
 
     /**
+     * 通过用户id列表
      * 根据用户ID查找问题
      *
      * @param userId 用户id
@@ -60,6 +63,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
     Integer update(Question question);
 
     /**
+     * 集成电路观点
      * 增加阅读数
      *
      * @param questionId 问题id
@@ -68,6 +72,7 @@ public interface QuestionMapper extends BaseMapper<Question> {
     void icView(@Param("id") Long questionId);
 
     /**
+     * 集成电路评论
      * 增加评论数
      *
      * @param questionId 问题id

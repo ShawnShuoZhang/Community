@@ -2,7 +2,7 @@ package com.example.community.advice;
 
 import com.example.community.dto.ResultDto;
 import com.example.community.exception.CustomizeException;
-import com.example.community.exception.ECustomizeErrorCode;
+import com.example.community.enums.CustomizeErrorCode;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,13 +29,13 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 return ResultDto.errorOf((CustomizeException) ex);
             } else {
-                return ResultDto.errorOf(ECustomizeErrorCode.SYS_ERROR);
+                return ResultDto.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
         } else {
             if (ex instanceof CustomizeException) {
                 model.addAttribute("message", ex.getMessage());
             } else {
-                model.addAttribute("message", ECustomizeErrorCode.SYS_ERROR.getMessage());
+                model.addAttribute("message", CustomizeErrorCode.SYS_ERROR.getMessage());
             }
             return new ModelAndView("error");
         }

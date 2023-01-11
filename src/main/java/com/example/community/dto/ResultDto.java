@@ -12,9 +12,26 @@ import lombok.Data;
  */
 @Data
 public class ResultDto<T> {
+    /**
+     * 代码
+     */
     private Integer code;
+    /**
+     * 消息
+     */
     private String message;
+    /**
+     * 数据
+     */
     private T data;
+
+    /**
+     * 错误
+     *
+     * @param code    代码
+     * @param message 消息
+     * @return {@link ResultDto}
+     */
     public static ResultDto errorOf(Integer code, String message) {
         ResultDto resultDto = new ResultDto();
         resultDto.setCode(code);
@@ -22,10 +39,21 @@ public class ResultDto<T> {
         return resultDto;
     }
 
+    /**
+     * 错误
+     *
+     * @param errorCode 错误代码
+     * @return {@link ResultDto}
+     */
     public static ResultDto errorOf(CustomizeErrorCode errorCode) {
         return errorOf(errorCode.getCode(), errorCode.getMessage());
     }
 
+    /**
+     * 好了
+     *
+     * @return {@link ResultDto}
+     */
     public static ResultDto okOf() {
         ResultDto resultDto = new ResultDto();
         resultDto.setCode(200);
@@ -33,10 +61,22 @@ public class ResultDto<T> {
         return resultDto;
     }
 
+    /**
+     * 错误
+     *
+     * @param e e
+     * @return {@link ResultDto}
+     */
     public static ResultDto errorOf(CustomizeException e) {
         return errorOf(e.getCode(), e.getMessage());
     }
 
+    /**
+     * 好了
+     *
+     * @param data 数据
+     * @return {@link ResultDto}
+     */
     public static <T> ResultDto okOf(T data) {
         ResultDto resultDto = new ResultDto();
         resultDto.setCode(200);

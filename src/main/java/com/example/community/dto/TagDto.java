@@ -12,6 +12,12 @@ import java.util.List;
  */
 @Data
 public class TagDto {
+    /**
+     * 类别名称
+     */
     private String categoryName;
+    /**
+     * 标签
+     */
     private List<String> tags;
 }

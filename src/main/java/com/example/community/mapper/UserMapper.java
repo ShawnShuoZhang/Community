@@ -20,6 +20,7 @@ public interface UserMapper {
     void insert(User user);
 
     /**
+     * 找到了令牌
      * 查找令牌
      *
      * @param token 令牌
@@ -38,6 +39,7 @@ public interface UserMapper {
     // User findByAccountId(@Param("id")String id);
 
     /**
+     * 发现通过id
      * 查找通过id
      *
      * @param creator 创造者

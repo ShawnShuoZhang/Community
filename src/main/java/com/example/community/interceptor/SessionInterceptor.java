@@ -1,7 +1,7 @@
 package com.example.community.interceptor;
 
+import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
-import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.User;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +25,22 @@ import java.util.Arrays;
  */
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
+    /**
+     * 用户映射器
+     */
     @Autowired
     UserMapper userMapper;
 
+    /**
+     * 前处理
+     *
+     * @param request  请求
+     * @param response 响应
+     * @param handler  处理程序
+     * @return boolean
+     * @throws ServletException servlet异常
+     * @throws IOException      ioexception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
@@ -46,16 +59,34 @@ public class SessionInterceptor implements HandlerInterceptor {
             }
         }
         if (request.getSession().getAttribute("user") == null) {
-            throw new CustomizeException(ECustomizeErrorCode.NO_LOGIN);
+            throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
         }
         return true;
     }
 
+    /**
+     * 处理后
+     *
+     * @param request      请求
+     * @param response     响应
+     * @param handler      处理程序
+     * @param modelAndView 模型和视图
+     * @throws Exception 异常
+     */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
+    /**
+     * 完成后
+     *
+     * @param request  请求
+     * @param response 响应
+     * @param handler  处理程序
+     * @param ex       前女友
+     * @throws Exception 异常
+     */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);

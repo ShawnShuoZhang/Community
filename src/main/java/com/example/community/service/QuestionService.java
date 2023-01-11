@@ -1,11 +1,9 @@
 package com.example.community.service;
 
-import cn.hutool.Hutool;
-import cn.hutool.core.collection.ListUtil;
 import com.example.community.dto.PaginationDto;
 import com.example.community.dto.QuestionDto;
+import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
-import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.Question;
@@ -28,19 +26,26 @@ import java.util.List;
  */
 @Service
 public class QuestionService {
+    /**
+     * 问题映射器
+     */
     @Autowired
     private QuestionMapper questionMapper;
+    /**
+     * 用户映射器
+     */
     @Autowired
     private UserMapper userMapper;
 
     /**
+     * 列表
      * 获取问题列表
      *
      * @param page 页面
      * @param size 大小
-     * @return {@link PaginationDto}
+     * @return {@link PaginationDto}<{@link QuestionDto}>
      */
-    public PaginationDto list(Integer page, Integer size) {
+    public PaginationDto<QuestionDto> list(Integer page, Integer size) {
         PageHelper.startPage(page, size);
         List<Question> list = questionMapper.list();
         // ListUtil.sortByProperty(list, "gmtCreate");
@@ -48,14 +53,15 @@ public class QuestionService {
     }
 
     /**
+     * 列表
      * 获取问题列表，根据用户id
      *
      * @param userId 用户id
      * @param page   页面
      * @param size   大小
-     * @return {@link PaginationDto}
+     * @return {@link PaginationDto}<{@link QuestionDto}>
      */
-    public PaginationDto list(String userId, Integer page, Integer size) {
+    public PaginationDto<QuestionDto> list(String userId, Integer page, Integer size) {
         PageHelper.startPage(page, size);
         List<Question> list = questionMapper.listByUserId(userId);
         return getPaginationDto(page, size, list);
@@ -67,12 +73,12 @@ public class QuestionService {
      * @param page 页面
      * @param size 大小
      * @param list 列表
-     * @return {@link PaginationDto}
+     * @return {@link PaginationDto}<{@link QuestionDto}>
      */
     @NotNull
-    private PaginationDto getPaginationDto(Integer page, Integer size, List<Question> list) {
+    private PaginationDto<QuestionDto> getPaginationDto(Integer page, Integer size, List<Question> list) {
         List<QuestionDto> questionDtoList = new ArrayList<>();
-        PaginationDto paginationDto = new PaginationDto();
+        PaginationDto<QuestionDto> paginationDto = new PaginationDto<QuestionDto>();
         for (Question question : list) {
             User user = userMapper.findById(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
@@ -80,7 +86,7 @@ public class QuestionService {
             questionDto.setUser(user);
             questionDtoList.add(questionDto);
         }
-        paginationDto.setQuestions(questionDtoList);
+        paginationDto.setData(questionDtoList);
         PageInfo<Question> pageInfo = new PageInfo<>(list);
         int pages = pageInfo.getPages();
         long total = pageInfo.getTotal();
@@ -97,7 +103,7 @@ public class QuestionService {
     public QuestionDto findById(Long questionId) {
         Question question = questionMapper.findById(questionId);
         if (question == null) {
-            throw new CustomizeException(ECustomizeErrorCode.QUESTION_NOT_FOUND);
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question, questionDto);
@@ -116,9 +122,11 @@ public class QuestionService {
     }
 
     /**
+     * 更新
      * 更新问题
      *
      * @param question 问题
+     * @return {@link Integer}
      */
     public Integer update(Question question) {
         Integer update = questionMapper.update(question);
@@ -126,6 +134,7 @@ public class QuestionService {
     }
 
     /**
+     * 集成电路观点
      * 增加阅读数
      *
      * @param questionId 问题id

@@ -1,6 +1,5 @@
 package com.example.community.controller;
 
-import com.example.community.cache.TagCache;
 import com.example.community.dto.CommentDto;
 import com.example.community.dto.QuestionDto;
 import com.example.community.enums.CommentTypeEnum;
@@ -23,11 +22,24 @@ import java.util.List;
  */
 @Controller
 public class QuestionController {
+    /**
+     * 问题服务
+     */
     @Autowired
     private QuestionService questionService;
+    /**
+     * 评论服务
+     */
     @Autowired
     private CommentService commentService;
 
+    /**
+     * 问题
+     *
+     * @param questionId 问题id
+     * @param model      模型
+     * @return {@link String}
+     */
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long questionId,
                            Model model) {

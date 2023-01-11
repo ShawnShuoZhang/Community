@@ -2,8 +2,8 @@ package com.example.community.controller;
 
 import com.example.community.cache.TagCache;
 import com.example.community.dto.QuestionDto;
+import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
-import com.example.community.exception.ECustomizeErrorCode;
 import com.example.community.model.Question;
 import com.example.community.model.User;
 import com.example.community.service.QuestionService;
@@ -26,10 +26,14 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class PublishController {
+    /**
+     * 问题服务
+     */
     @Autowired
     QuestionService questionService;
 
     /**
+     * 编辑
      * 编辑问题
      *
      * @param id      id
@@ -51,8 +55,10 @@ public class PublishController {
     }
 
     /**
+     * 发布
      * 打开发布页面
      *
+     * @param model 模型
      * @return {@link String}
      */
     @GetMapping("/publish")
@@ -62,6 +68,7 @@ public class PublishController {
     }
 
     /**
+     * 做出版
      * 进行发布动作
      *
      * @param title       标题
@@ -122,7 +129,7 @@ public class PublishController {
             Integer update = questionService.update(question);
             session.setAttribute("id", null);
             if (update != 1) {
-                throw new CustomizeException(ECustomizeErrorCode.QUESTION_NOT_FOUND);
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
         return "redirect:/";

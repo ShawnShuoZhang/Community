@@ -35,6 +35,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
 
     /**
+     * 公司评论数
      * 增加评论数
      *
      * @param parentId 父id
