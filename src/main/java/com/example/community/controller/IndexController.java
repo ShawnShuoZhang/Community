@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * 指数控制器
  *
@@ -23,11 +25,6 @@ public class IndexController {
      */
     @Autowired
     QuestionService questionService;
-    /**
-     * 通知服务
-     */
-    @Autowired
-    private NotificationService notificationService;
 
     /**
      * 指数
@@ -40,9 +37,12 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                        @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        PaginationDto<QuestionDto> pagination = questionService.list(page, size);
+                        @RequestParam(name = "size", defaultValue = "5") Integer size,
+                        @RequestParam(name = "search", required = false) String search,
+                        HttpSession session) {
+        PaginationDto<QuestionDto> pagination = questionService.list(page, size, search);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("search", search);
         return "index";
     }
 }

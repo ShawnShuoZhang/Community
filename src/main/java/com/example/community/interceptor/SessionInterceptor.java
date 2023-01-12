@@ -4,6 +4,7 @@ import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.User;
+import com.example.community.service.NotificationService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class SessionInterceptor implements HandlerInterceptor {
      */
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    NotificationService notificationService;
 
     /**
      * 前处理
@@ -53,6 +56,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     if (user != null) {
                         request.getSession().setAttribute("user", user);
                         System.out.println("user is" + user.getAccountId());
+                        Long unreadCount = notificationService.unreadCount(user.getAccountId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }

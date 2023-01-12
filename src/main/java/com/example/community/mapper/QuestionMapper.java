@@ -88,4 +88,13 @@ public interface QuestionMapper extends BaseMapper<Question> {
      */
     @Select("select * from question where id != #{id} and tag regexp (select replace(tag, '，', '|') from QUESTION where id = #{id}) order by GMT_CREATE desc limit 20")
     List<Question> relatedQuestionList(QuestionDto question);
+
+    /**
+     * 列表,搜索
+     *
+     * @param replace 取代
+     * @return {@link List}<{@link Question}>
+     */
+    @Select("select * from question where UPPER(TITLE) regexp #{search} order by GMT_CREATE desc")
+    List<Question> listBySearch(@Param("search") String replace);
 }

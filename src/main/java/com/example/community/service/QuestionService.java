@@ -10,6 +10,7 @@ import com.example.community.model.Question;
 import com.example.community.model.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,20 @@ public class QuestionService {
      * 列表
      * 获取问题列表
      *
-     * @param page 页面
-     * @param size 大小
+     * @param page   页面
+     * @param size   大小
+     * @param search
      * @return {@link PaginationDto}<{@link QuestionDto}>
      */
-    public PaginationDto<QuestionDto> list(Integer page, Integer size) {
+    public PaginationDto<QuestionDto> list(Integer page, Integer size, String search) {
         PageHelper.startPage(page, size);
-        List<Question> list = questionMapper.list();
+        List<Question> list = new ArrayList<>();
+        if (StringUtils.isBlank(search)) {
+            list = questionMapper.list();
+        }else {
+            String replace = search.replace(" ", "|").toUpperCase();
+            list = questionMapper.listBySearch(replace);
+        }
         // ListUtil.sortByProperty(list, "gmtCreate");
         return getPaginationDto(page, size, list);
     }

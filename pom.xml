@@ -19,6 +19,7 @@
     </properties>
 
     <dependencies>
+
         <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -112,15 +113,15 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.flywaydb</groupId>-->
-<!--                <artifactId>flyway-maven-plugin</artifactId>-->
-<!--                <version>9.8.1</version>-->
-<!--                <configuration>-->
-<!--                    <url>jdbc:h2:~/test</url>-->
-<!--                    <locations>filesystem:src/main/resources/db/migration</locations>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.flywaydb</groupId>-->
+            <!--                <artifactId>flyway-maven-plugin</artifactId>-->
+            <!--                <version>9.8.1</version>-->
+            <!--                <configuration>-->
+            <!--                    <url>jdbc:h2:~/test</url>-->
+            <!--                    <locations>filesystem:src/main/resources/db/migration</locations>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>

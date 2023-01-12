@@ -1,5 +1,6 @@
 package com.example.community.service;
 
+import cn.hutool.core.collection.ListUtil;
 import com.example.community.dto.NotificationDto;
 import com.example.community.dto.PaginationDto;
 import com.example.community.enums.CustomizeErrorCode;
@@ -50,6 +51,7 @@ public class NotificationService {
     public PaginationDto<NotificationDto> list(String accountId, Integer page, Integer size) {
         PageHelper.startPage(page, size);
         List<Notification> notifications = notificationMapper.listByUserId(accountId);
+        ListUtil.sortByProperty(notifications, "status");
         return getPaginationDto(page, size, notifications);
     }
 
