@@ -47,3 +47,9 @@ logging:
       example:
         community:
           mapper: debug
+#  file:
+#    path: E:\IDEA_JAVA\community\src\main\resources\log
+#  logback:
+#    rollingpolicy:
+#      max-file-size: 1KB
+#      max-history: 3

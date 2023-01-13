@@ -4,6 +4,7 @@ import com.example.community.dto.AccessTokenDto;
 import com.example.community.dto.GithubUser;
 import com.example.community.provider.GithubProvider;
 import com.example.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import java.io.IOException;
  * @date 2023/01/01
  */
 @Controller
+@Slf4j
 public class AuthorizeController {
     /**
      * github提供者
@@ -81,6 +83,7 @@ public class AuthorizeController {
             response.addCookie(cookie);
         } else {
             // 登录失败
+            log.error("callback get github error,{}", githubUser);
         }
         response.sendRedirect("/");
         return null;

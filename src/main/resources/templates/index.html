@@ -86,12 +86,10 @@
                 </div>
                 <!--        右边-->
                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                    <h3>
-                        <span class="glyphicon glyphicon-fire wrap" aria-hidden="true"></span>
-                        <span class="wrap" th:text="热门话题"></span>
-                    </h3>
+                    <div th:insert="~{notice :: notice}"></div>
                 </div>
             </div>
         </div>
+        <div th:insert="~{footer :: foot}"></div>
     </body>
 </html>

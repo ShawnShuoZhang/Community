@@ -1,20 +1,21 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Error</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <script src="/js/jquery-3.6.3.min.js"></script>
-    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
-    <link rel="stylesheet" href="/css/community.css">
-    <script src="https://cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
-</head>
-<body>
-<div th:insert="~{navigation :: nav}"></div>
-<div class="jumbotron" style="margin: 50px">
-    <h1>出错啦</h1>
-    <p th:text="${message}=='No message available'?'服务器崩了':${message}"></p>
-    <p><a class="btn btn-primary btn-lg" href="/" role="button">返回首页</a></p>
-</div>
-</body>
+    <head>
+        <title>Error</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+        <script src="/js/jquery-3.6.3.min.js"></script>
+        <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+        <link rel="stylesheet" href="/css/community.css">
+        <script src="https://cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
+    </head>
+    <body>
+        <div th:insert="~{navigation :: nav}"></div>
+        <div class="jumbotron" style="margin: 50px">
+            <h1>出错啦</h1>
+            <p th:text="${message}=='No message available'?'服务器崩了':${message}"></p>
+            <p><a class="btn btn-primary btn-lg" href="/" role="button">返回首页</a></p>
+        </div>
+        <div th:insert="~{footer :: foot}"></div>
+    </body>
 </html>
