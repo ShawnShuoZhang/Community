@@ -7,6 +7,7 @@ import com.example.community.model.User;
 import com.example.community.service.NotificationService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 会话拦截器
@@ -33,6 +35,8 @@ public class SessionInterceptor implements HandlerInterceptor {
     UserMapper userMapper;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 前处理
@@ -52,7 +56,13 @@ public class SessionInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
+                    User user;
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("user: " + token))) {
+                        user = (User) redisTemplate.opsForValue().get("user: " + token);
+                    } else {
+                        user = userMapper.findByToken(token);
+                        redisTemplate.opsForValue().set("user: " + token, user, 60 * 30, TimeUnit.SECONDS);
+                    }
                     if (user != null) {
                         request.getSession().setAttribute("user", user);
                         System.out.println("user is" + user.getAccountId());

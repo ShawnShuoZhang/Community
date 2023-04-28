@@ -16,8 +16,10 @@ import com.example.community.model.Comment;
 import com.example.community.model.Notification;
 import com.example.community.model.Question;
 import com.example.community.model.User;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 评论服务
@@ -34,6 +37,8 @@ import java.util.Objects;
  */
 @Service
 public class CommentService {
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 评论映射器
@@ -65,12 +70,15 @@ public class CommentService {
      * @param session          会话
      * @param type             类型
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void insert(CommentCreateDto commentCreateDto, HttpSession session, Integer type) {
         Comment comment = new Comment();
         comment.setParentId(commentCreateDto.getParentId());
+        //打印日志
+        LoggerFactory.getLogger(CommentService.class).info("删除的key" + "commentDtos: " + commentCreateDto.getParentId() + ": " + type);
         comment.setContent(commentCreateDto.getContent());
         comment.setType(commentCreateDto.getType());
+        redisTemplate.delete("commentDtos: " + commentCreateDto.getParentId() + ": " + commentCreateDto.getType());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setLikeCount(0L);
@@ -142,21 +150,28 @@ public class CommentService {
      * @return {@link List}<{@link CommentDto}>
      */
     public List<CommentDto> findByParentId(Long questionId, CommentTypeEnum type) {
-        System.out.println("questionId = " + questionId.toString());
-        List<Comment> byParentId = commentMapper.selectByParentIdAndType(String.valueOf(questionId), type.getType());
-        if (byParentId.size() == 0) {
-            return new ArrayList<>();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("commentDtos: " + questionId + ": " + type.getType()))) {
+            System.out.println("redis");
+            return (List<CommentDto>) redisTemplate.opsForValue().get("commentDtos: " + questionId + ": " + type.getType());
+        } else {
+            System.out.println("questionId = " + questionId.toString());
+            List<Comment> byParentId = commentMapper.selectByParentIdAndType(String.valueOf(questionId), type.getType());
+            if (byParentId.size() == 0) {
+                return new ArrayList<>();
+            }
+            List<CommentDto> commentDtos = new ArrayList<>();
+            for (Comment comment : byParentId) {
+                CommentDto commentDto = new CommentDto();
+                commentDto.setUser(userMapper.findById(comment.getCommentator()));
+                BeanUtils.copyProperties(comment, commentDto);
+                commentDtos.add(commentDto);
+            }
+            ListUtil.sortByProperty(commentDtos, "gmtCreate");
+            ListUtil.reverse(commentDtos);
+            redisTemplate.opsForValue().set("commentDtos: " + questionId + ": " + type.getType(), commentDtos, 60, TimeUnit.SECONDS);
+            LoggerFactory.getLogger(CommentService.class).info("插入的key" + "commentDtos: " + questionId + ": " + type.getType());
+            return commentDtos;
         }
-        List<CommentDto> commentDtos = new ArrayList<>();
-        for (Comment comment : byParentId) {
-            CommentDto commentDto = new CommentDto();
-            commentDto.setUser(userMapper.findById(comment.getCommentator()));
-            BeanUtils.copyProperties(comment, commentDto);
-            commentDtos.add(commentDto);
-        }
-        ListUtil.sortByProperty(commentDtos, "gmtCreate");
-        ListUtil.reverse(commentDtos);
-        return commentDtos;
     }
 }
 

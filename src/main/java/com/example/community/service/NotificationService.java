@@ -14,11 +14,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 通知服务
@@ -39,6 +41,8 @@ public class NotificationService {
      */
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 列表
@@ -49,11 +53,17 @@ public class NotificationService {
      * @return {@link PaginationDto}<{@link NotificationDto}>
      */
     public PaginationDto<NotificationDto> list(String accountId, Integer page, Integer size) {
-        PageHelper.startPage(page, size);
-        List<Notification> notifications = notificationMapper.listByUserId(accountId);
-        ListUtil.sortByProperty(notifications, "status");
-        return getPaginationDto(page, size, notifications);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("notifications: " + accountId + ": " + page + ": " + size))) {
+            return (PaginationDto<NotificationDto>) redisTemplate.opsForValue().get("notifications: " + accountId + ": " + page + ": " + size);
+        } else {
+            PageHelper.startPage(page, size);
+            List<Notification> notifications = notificationMapper.listByUserId(accountId);
+            ListUtil.sortByProperty(notifications, "status");
+            redisTemplate.opsForValue().set("notifications: " + accountId + ": " + page + ": " + size, notifications, 60, TimeUnit.SECONDS);
+            return getPaginationDto(page, size, notifications);
+        }
     }
+
 
     /**
      * 得到分页dto
@@ -87,7 +97,13 @@ public class NotificationService {
      * @return {@link Long}
      */
     public Long unreadCount(String accountId) {
-        return notificationMapper.unreadCount(accountId);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("unreadCount: " + accountId))) {
+            return Long.parseLong(redisTemplate.opsForValue().get("unreadCount: " + accountId).toString());
+        } else {
+            Long count = notificationMapper.unreadCount(accountId);
+            redisTemplate.opsForValue().set("unreadCount: " + accountId, count, 60, TimeUnit.SECONDS);
+            return count;
+        }
     }
 
     /**
@@ -98,17 +114,25 @@ public class NotificationService {
      * @return {@link NotificationDto}
      */
     public NotificationDto read(Long id, User user) {
-        Notification notification = notificationMapper.selectById(id);
-        if (notification == null) {
-            throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
-        }
-        if (!Objects.equals(notification.getReceiver(), user.getAccountId())) {
-            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
-        }
+        Notification notification = null;
         NotificationDto notificationDto = new NotificationDto();
-        BeanUtils.copyProperties(notification, notificationDto);
-        notificationDto.setTypeName(NotificationEnum.nameOfType(notification.getType()));
-        notificationMapper.updateStatus(id);
-        return notificationDto;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("notification: " + id + ": " + user.getAccountId()))) {
+            NotificationDto dto = (NotificationDto) redisTemplate.opsForValue().get("notification: " + id + ": " + user.getAccountId());
+            notificationMapper.updateStatus(id);
+            return dto;
+        } else {
+            notification = notificationMapper.selectById(id);
+            if (notification == null) {
+                throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
+            }
+            if (!Objects.equals(notification.getReceiver(), user.getAccountId())) {
+                throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
+            }
+            BeanUtils.copyProperties(notification, notificationDto);
+            notificationDto.setTypeName(NotificationEnum.nameOfType(notification.getType()));
+            redisTemplate.opsForValue().set("notification: " + id + ": " + user.getAccountId(), notificationDto, 60, TimeUnit.SECONDS);
+            notificationMapper.updateStatus(id);
+            return notificationDto;
+        }
     }
 }
