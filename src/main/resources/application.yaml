@@ -19,9 +19,17 @@ spring:
   devtools:
     restart:
       exclude: classpath:/templates/**
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    lettuce:
+      pool:
+        max-idle: 16
+        min-idle: 8
+        max-active: 32
 server:
   port: 8080
-
 github:
   client:
     id: 1a24c2ecdddf6a7ff7c2

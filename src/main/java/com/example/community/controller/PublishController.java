@@ -1,6 +1,6 @@
 package com.example.community.controller;
 
-import com.example.community.cache.TagCache;
+import com.example.community.cache.Tag;
 import com.example.community.dto.QuestionDto;
 import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
@@ -31,6 +31,8 @@ public class PublishController {
      */
     @Autowired
     QuestionService questionService;
+    @Autowired
+    Tag tag;
 
     /**
      * 编辑
@@ -50,7 +52,7 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         session.setAttribute("id", question.getId());
-        model.addAttribute("tags", TagCache.get());
+        model.addAttribute("tags", tag.get());
         return "publish";
     }
 
@@ -63,7 +65,7 @@ public class PublishController {
      */
     @GetMapping("/publish")
     public String publish(Model model) {
-        model.addAttribute("tags", TagCache.get());
+        model.addAttribute("tags", tag.get());
         return "publish";
     }
 
@@ -84,7 +86,7 @@ public class PublishController {
                             @RequestParam(value = "tag", required = false) String tag,
                             HttpSession session,
                             Model model) {
-        model.addAttribute("tags", TagCache.get());
+        model.addAttribute("tags", this.tag.get());
         Long id = (Long) session.getAttribute("id");
         model.addAttribute("title", title);
         model.addAttribute("description", description);
@@ -102,7 +104,7 @@ public class PublishController {
             return "publish";
         }
         //todo
-        String filterInvalid = TagCache.filterInvalid(tag);
+        String filterInvalid = this.tag.filterInvalid(tag);
         if (StringUtils.isNotBlank(filterInvalid)) {
             model.addAttribute("error", "输入非法标签" + filterInvalid);
             return "publish";

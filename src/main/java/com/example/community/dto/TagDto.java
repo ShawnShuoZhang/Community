@@ -1,6 +1,7 @@
 package com.example.community.dto;
 
 import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @date 2023/01/10
  */
 @Data
-public class TagDto {
+public class TagDto implements java.io.Serializable {
     /**
      * 类别名称
      */
