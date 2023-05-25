@@ -115,6 +115,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.seedstack.addons.jmh</groupId>-->
+<!--            <artifactId>jmh</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjdk.jmh</groupId>-->
+<!--            <artifactId>jmh-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.taobao.arthas</groupId>-->
+<!--            <artifactId>arthas-spring-boot-starter</artifactId>-->
+<!--            <version>3.6.7</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

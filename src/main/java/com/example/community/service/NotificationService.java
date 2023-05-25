@@ -54,7 +54,8 @@ public class NotificationService {
      */
     public PaginationDto<NotificationDto> list(String accountId, Integer page, Integer size) {
         if (Boolean.TRUE.equals(redisTemplate.hasKey("notifications: " + accountId + ": " + page + ": " + size))) {
-            return (PaginationDto<NotificationDto>) redisTemplate.opsForValue().get("notifications: " + accountId + ": " + page + ": " + size);
+            // return (PaginationDto<NotificationDto>) redisTemplate.opsForValue().get("notifications: " + accountId + ": " + page + ": " + size);
+            return getPaginationDto(page, size, (List<Notification>) redisTemplate.opsForValue().get("notifications: " + accountId + ": " + page + ": " + size));
         } else {
             PageHelper.startPage(page, size);
             List<Notification> notifications = notificationMapper.listByUserId(accountId);
